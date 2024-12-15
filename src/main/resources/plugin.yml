@@ -1,0 +1,20 @@
+name: NoSwim
+version: 0.1-BETA-B1
+main: net.heosystems.noswim.NoSwim
+api-version: 1.16
+description: A plugin that prevents players from swimming in deep water.
+author: HamzieDev
+
+commands:
+  noswim:
+    description: Control the NoSwim plugin (enable, disable, reload).
+    usage: /noswim <enable|disable|reload>
+    permission: noswim.admin
+
+permissions:
+  noswim.admin:
+    description: Allows usage of the /noswim command to control the plugin.
+    default: op
+  noswim.bypass:
+    description: Allows players to bypass the sinking mechanic.
+    default: false
