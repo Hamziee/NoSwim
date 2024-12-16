@@ -84,13 +84,63 @@ public class SwimListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!plugin.getConfig().getBoolean("allow-building-above-water")) {
-            Block block = event.getBlock();
-            Block blockBelow = block.getLocation().subtract(0, 1, 0).getBlock();
+        Block block = event.getBlock();
+        int minWaterHeight = plugin.getConfig().getInt("min-water-height", 2);
 
-            if (blockBelow.getType() == Material.WATER) {
+        if (plugin.getConfig().getBoolean("deny-building-in-water")) {
+            if (block.getType() == Material.WATER) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage("[NoSwim] You are not allowed to build above restricted waters!");
+                event.getPlayer().sendMessage("[NoSwim] You are not allowed to build in water!");
+            }
+        }
+
+        // Restrict building
+        if (plugin.getConfig().getBoolean("deny-building-above-water")) {
+            int waterHeightBelow = 0;
+            Block blockBelow = block.getRelative(0, -1, 0);
+
+            while (blockBelow.getY() > 0) {
+                if (blockBelow.getType() == Material.WATER) {
+                    waterHeightBelow++;
+                    blockBelow = blockBelow.getRelative(0, -1, 0);
+                } else if (blockBelow.getType() != Material.AIR) {
+                    break;
+                } else {
+                    blockBelow = blockBelow.getRelative(0, -1, 0);
+                }
+            }
+
+            if (waterHeightBelow >= minWaterHeight) {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage("[NoSwim] You are not allowed to build above water of this depth!");
+                return;
+            }
+        }
+
+        if (plugin.getConfig().getBoolean("deny-building-in-water")) {
+            int waterHeightAbove = 0;
+            Block blockAbove = block.getRelative(0, 1, 0);
+            int consecutiveAirBlocks = 0;
+
+            while (blockAbove.getY() < block.getWorld().getMaxHeight()) {
+                if (blockAbove.getType() == Material.WATER) {
+                    waterHeightAbove++;
+                    blockAbove = blockAbove.getRelative(0, 1, 0);
+                    consecutiveAirBlocks = 0;
+                } else if (blockAbove.getType() == Material.AIR) {
+                    consecutiveAirBlocks++;
+                    if (consecutiveAirBlocks >= 10) {
+                        break;
+                    }
+                    blockAbove = blockAbove.getRelative(0, 1, 0);
+                } else {
+                    break;
+                }
+            }
+
+            if (waterHeightAbove >= minWaterHeight) {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage("[NoSwim] You are not allowed to build underneath water of this depth!");
             }
         }
     }

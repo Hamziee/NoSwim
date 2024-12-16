@@ -4,7 +4,7 @@
 
     <groupId>net.heosystems</groupId>
     <artifactId>NoSwim</artifactId>
-    <version>0.1-BETA-B1</version>
+    <version>0.2-BETA-B4</version>
 
     <repositories>
         <repository>
