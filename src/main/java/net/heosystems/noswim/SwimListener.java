@@ -1,5 +1,6 @@
 package net.heosystems.noswim;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -7,9 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class SwimListener implements Listener {
 
@@ -19,33 +20,37 @@ public class SwimListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
+    public void start() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    // Exclude Creative and Spectator modes
+                    if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                        continue;
+                    }
 
-        // Exclude Creative and Spectator modes
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
-            return;
-        }
+                    // Check if the player is in water
+                    if (player.getLocation().getBlock().getType() == Material.WATER) {
 
-        // Check if the player is in water
-        if (player.getLocation().getBlock().getType() == Material.WATER) {
+                        // Check Water Breathing Exemption
+                        if (plugin.getConfig().getBoolean("water-breath-exemption")
+                                && player.hasPotionEffect(PotionEffectType.WATER_BREATHING)) {
+                            continue;
+                        }
 
-            // Check Water Breathing Exemption
-            if (plugin.getConfig().getBoolean("water-breath-exemption")
-                    && player.hasPotionEffect(PotionEffectType.WATER_BREATHING)) {
-                return;
-            }
-
-            // Check water depth
-            int minHeight = plugin.getConfig().getInt("min-water-height");
-            if (isDeepWater(player, minHeight)) {
-                if (plugin.getConfig().getBoolean("downforce.enabled")) {
-                    applySinkingEffect(player);
+                        // Check water depth
+                        int minHeight = plugin.getConfig().getInt("min-water-height");
+                        if (isDeepWater(player, minHeight)) {
+                            if (plugin.getConfig().getBoolean("downforce.enabled")) {
+                                applySinkingEffect(player);
+                            }
+                            applyPlayerDamage(player);
+                        }
+                    }
                 }
-                applyPlayerDamage(player);
             }
-        }
+        }.runTaskTimer(plugin, 0L, 1L);  // Run every tick (1L)
     }
 
     private boolean isDeepWater(Player player, int minHeight) {
@@ -117,7 +122,7 @@ public class SwimListener implements Listener {
             }
         }
 
-        if (plugin.getConfig().getBoolean("deny-building-in-water")) {
+        if (plugin.getConfig().getBoolean("deny-building-underneath-water")) {
             int waterHeightAbove = 0;
             Block blockAbove = block.getRelative(0, 1, 0);
             int consecutiveAirBlocks = 0;

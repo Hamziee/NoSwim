@@ -1,9 +1,9 @@
-# NoSwim Configuration File - Version 0.2-BETA-B6
+# NoSwim Configuration File - Version 0.2-BETA-B8
 # It is highly recommend to regenerate the config file after downloading a new version.
 # To regenerate the config file: delete this config file and restart the server.
 
 # Minimum water height (depth) to activate the sinking effect
-min-water-height: 3                     # Number
+min-water-height: 3                     # Number (Default: 3)
 
 # Exempt players with the Water Breathing effect
 water-breath-exemption: true            # Options: true, false
@@ -17,7 +17,7 @@ player-damage:
 # Sinking effect
 downforce:
   enabled: true                         # Toggle sinking effect on/off | Options: true, false
-  amount: 0.25                          # Default sinking speed (0.1 is slower, 0.5 is faster)
+  amount: 0.125                         # Default sinking speed (0.1 is slower, 0.5 is faster)
 
 # Restrict building in water
 deny-building-in-water: false           # Options: true, false (Default: false)
@@ -25,5 +25,5 @@ deny-building-in-water: false           # Options: true, false (Default: false)
 # Restrict building above water
 deny-building-above-water: false        # Options: true, false (Default: false)
 
-# [BETA] Restrict building underneath water
+# [BETA] Restrict building underneath water (This will probably not work and be very buggy)
 deny-building-underneath-water: false   # Options: true, false (Default: false)

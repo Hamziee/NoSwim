@@ -14,7 +14,11 @@ public class NoSwim extends JavaPlugin {
         saveDefaultConfig();
 
         // Register the SwimListener
-        getServer().getPluginManager().registerEvents(new SwimListener(this), this);
+        SwimListener swimListener = new SwimListener(this);
+        getServer().getPluginManager().registerEvents(swimListener, this);
+
+        // Start the repeating task to check every tick
+        swimListener.start();
 
         // Register the command
         getCommand("noswim").setExecutor(new NoSwimCommand(this));
