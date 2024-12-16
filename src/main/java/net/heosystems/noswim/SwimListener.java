@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.block.BlockFace;
 
 public class SwimListener implements Listener {
 
@@ -93,9 +94,15 @@ public class SwimListener implements Listener {
         int minWaterHeight = plugin.getConfig().getInt("min-water-height", 2);
 
         if (plugin.getConfig().getBoolean("deny-building-in-water")) {
-            if (block.getType() == Material.WATER) {
-                event.setCancelled(true);
-                event.getPlayer().sendMessage("[NoSwim] You are not allowed to build in water!");
+            Block placedBlock = event.getBlock();
+            // Check if the block being placed is inside water
+            for (BlockFace face : BlockFace.values()) {
+                Block adjacentBlock = placedBlock.getRelative(face);
+                if (adjacentBlock.getType() == Material.WATER || adjacentBlock.getType() == Material.AIR) {
+                    event.setCancelled(true);
+                    event.getPlayer().sendMessage("[NoSwim] You are not allowed to build in water!");
+                    return;
+                }
             }
         }
 
