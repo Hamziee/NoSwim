@@ -1,4 +1,4 @@
-# NoSwim Configuration File - Version 0.2-BETA-B4
+# NoSwim Configuration File - Version 0.2-BETA-B5
 # It is highly recommend to regenerate the config file after downloading a new version.
 # To regenerate the config file: delete this config file and restart the server.
 
@@ -19,11 +19,11 @@ downforce:
   enabled: true                    # Toggle sinking effect on/off | Options: true, false
   amount: 0.25                     # Default sinking speed (0.1 is slower, 0.5 is faster)
 
-# [BETA] Restrict building in water
-deny-building-in-water: true   # Options: true, false (Default: true)
+# Restrict building in water
+deny-building-in-water: false   # Options: true, false (Default: false)
 
-# [BETA] Restrict building above water
-deny-building-above-water: true   # Options: true, false (Default: true)
+# Restrict building above water
+deny-building-above-water: false   # Options: true, false (Default: false)
 
 # [BETA] Restrict building underneath water
-deny-building-underneath-water: true   # Options: true, false (Default: true)
+deny-building-underneath-water: false   # Options: true, false (Default: false)

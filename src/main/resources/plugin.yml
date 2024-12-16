@@ -1,5 +1,5 @@
 name: NoSwim
-version: 0.2-BETA-B4
+version: 0.2-BETA-B5
 main: net.heosystems.noswim.NoSwim
 api-version: 1.16
 description: A plugin that prevents players from swimming in deep water.
